@@ -23,6 +23,8 @@ class Repo:
     branch: str = "main"
     poll_interval: int = 30
     enabled: bool = True
+    last_commit: Optional[str] = None
+    created_at: Optional[str] = None
 
 
 @dataclass
