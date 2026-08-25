@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ 'Редактировать' if repo else 'Добавить' }} репозиторий — Git Monitor
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>{{ 'Редактировать' if repo else 'Добавить репозиторий' }}</h2>
+
+    <form method="POST" style="margin-top:16px">
+        <div class="form-group">
+            <label>Название</label>
+            <input type="text" name="name" required
+                   value="{{ repo.name if repo else '' }}"
+                   placeholder="Мой проект">
+        </div>
+
+        <div class="form-group">
+            <label>Путь к репозиторию</label>
+            <input type="text" name="path" required
+                   value="{{ repo.path if repo else '' }}"
+                   placeholder="/home/user/projects/my-repo">
+        </div>
+
+        <div class="form-group">
+            <label>Ветка</label>
+            <input type="text" name="branch"
+                   value="{{ repo.branch if repo else 'main' }}"
+                   placeholder="main">
+        </div>
+
+        <div class="form-group">
+            <label>Интервал проверки (секунды)</label>
+            <input type="number" name="poll_interval" min="5" max="3600"
+                   value="{{ repo.poll_interval if repo else 30 }}">
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <input type="checkbox" name="enabled" id="enabled"
+                       {{ 'checked' if (not repo) or repo.enabled else '' }}>
+                <label for="enabled">Включён</label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {{ 'Сохранить' if repo else 'Добавить' }}
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-ghost">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

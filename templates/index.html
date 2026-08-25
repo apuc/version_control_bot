@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Репозитории — Git Monitor{% endblock %}
+
+{% block content %}
+{% if repos %}
+    {% for repo in repos %}
+    <div class="card" style="cursor:pointer" onclick="location.href='{{ url_for('repo_detail', repo_id=repo.id) }}'">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <h2>{{ repo.name }}</h2>
+            <span class="badge {{ 'enabled' if repo.enabled else 'disabled' }}">
+                {{ 'Активен' if repo.enabled else 'Пауза' }}
+            </span>
+        </div>
+        <div class="meta" style="margin-top:6px">
+            <code>{{ repo.path }}</code> &middot;
+            ветка <code>{{ repo.branch }}</code> &middot;
+            каждые {{ repo.poll_interval }}с
+            {% if repo.last_commit %}
+            &middot; последний: <code>{{ repo.last_commit[:8] }}</code>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty">
+        <h2>Нет репозиториев</h2>
+        <p>Добавьте первый репозиторий для мониторинга.</p>
+        <a href="{{ url_for('repo_add') }}" class="btn btn-primary" style="margin-top:16px">+ Добавить</a>
+    </div>
+{% endif %}
+{% endblock %}

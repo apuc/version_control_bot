@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Git Monitor{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+        /* Header */
+        .header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 32px; padding-bottom: 16px;
+            border-bottom: 1px solid #1e293b;
+        }
+        .header h1 { font-size: 1.5rem; color: #f8fafc; }
+        .header h1 span { color: #38bdf8; }
+        .btn {
+            display: inline-block; padding: 8px 16px; border-radius: 6px;
+            font-size: 0.875rem; font-weight: 500; text-decoration: none;
+            cursor: pointer; border: none; transition: all 0.15s;
+        }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+        .btn-ghost {
+            background: transparent; color: #94a3b8; border: 1px solid #334155;
+        }
+        .btn-ghost:hover { background: #1e293b; color: #e2e8f0; }
+
+        /* Flash messages */
+        .flash { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 0.9rem; }
+        .flash.success { background: #065f46; color: #a7f3d0; }
+        .flash.error { background: #7f1d1d; color: #fca5a5; }
+
+        /* Cards */
+        .card {
+            background: #1e293b; border-radius: 10px; padding: 20px;
+            margin-bottom: 16px; border: 1px solid #334155;
+        }
+        .card h2 { font-size: 1.1rem; margin-bottom: 8px; }
+        .card .meta { color: #94a3b8; font-size: 0.85rem; }
+        .card .meta code {
+            background: #334155; padding: 2px 6px; border-radius: 4px;
+            font-size: 0.8rem; color: #7dd3fc;
+        }
+
+        /* Status badge */
+        .badge {
+            display: inline-block; padding: 2px 8px; border-radius: 9999px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+        .badge.enabled { background: #065f46; color: #6ee7b7; }
+        .badge.disabled { background: #451a03; color: #fdba74; }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { padding: 10px 12px; text-align: left; font-size: 0.9rem; }
+        th { color: #94a3b8; font-weight: 500; border-bottom: 1px solid #334155; }
+        td { border-bottom: 1px solid #1e293b; }
+
+        /* Form */
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 4px; font-size: 0.85rem; color: #94a3b8; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 8px 12px; border-radius: 6px;
+            border: 1px solid #334155; background: #0f172a; color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none; border-color: #2563eb;
+        }
+        .form-check { display: flex; align-items: center; gap: 8px; }
+        .form-check input[type="checkbox"] { width: auto; }
+        .form-actions { display: flex; gap: 8px; margin-top: 20px; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: 48px 0; color: #64748b; }
+        .empty p { margin-top: 8px; }
+
+        /* Inline binding add */
+        .binding-form {
+            display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;
+        }
+        .binding-form .form-group { margin-bottom: 0; flex: 1; min-width: 140px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span>Git</span> Monitor</h1>
+            <a href="{{ url_for('repo_add') }}" class="btn btn-primary">+ Репозиторий</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for cat, msg in messages %}
+                <div class="flash {{ cat }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

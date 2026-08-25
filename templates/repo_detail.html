@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}{{ repo.name }} — Git Monitor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+            <h2>{{ repo.name }}</h2>
+            <div class="meta" style="margin-top:6px">
+                <code>{{ repo.path }}</code> &middot;
+                ветка <code>{{ repo.branch }}</code> &middot;
+                каждые {{ repo.poll_interval }}с
+                {% if repo.last_commit %}
+                &middot; HEAD: <code>{{ repo.last_commit[:8] }}</code>
+                {% endif %}
+            </div>
+        </div>
+        <div style="display:flex;gap:8px">
+            <a href="{{ url_for('repo_edit', repo_id=repo.id) }}" class="btn btn-ghost btn-sm">Редактировать</a>
+            <form method="POST" action="{{ url_for('repo_delete', repo_id=repo.id) }}"
+                  onsubmit="return confirm('Удалить репозиторий?')">
+                <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Привязанные чаты</h2>
+
+    {% if bindings %}
+    <table>
+        <thead>
+            <tr>
+                <th>Chat ID</th>
+                <th>Название</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in bindings %}
+            <tr>
+                <td><code>{{ b.chat_id }}</code></td>
+                <td>{{ b.chat_title or '—' }}</td>
+                <td style="text-align:right">
+                    <form method="POST" action="{{ url_for('binding_delete', binding_id=b.id) }}"
+                          onsubmit="return confirm('Удалить привязку?')">
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#64748b;margin-top:8px">Нет привязанных чатов.</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('binding_add', repo_id=repo.id) }}"
+          style="margin-top:16px">
+        <div class="binding-form">
+            <div class="form-group">
+                <label>Chat ID</label>
+                <input type="text" name="chat_id" required placeholder="-1001234567890">
+            </div>
+            <div class="form-group">
+                <label>Название чата</label>
+                <input type="text" name="chat_title" placeholder="Мой чат">
+            </div>
+            <button type="submit" class="btn btn-primary" style="height:36px">Привязать</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
